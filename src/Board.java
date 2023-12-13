@@ -5,6 +5,7 @@ public class Board extends JPanel {
     public static final int WIDTH = 800;
     public static final int HEIGHT = 800;
     private int ROWS = 8;
+
     private int COLS = 8;
     private Tile[][] tiles = new Tile[8][8];
 
