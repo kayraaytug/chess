@@ -1,12 +1,9 @@
 public class Tile {
     private int posX, posY;
-    private String[][] label;
     private char color;
-    public Tile(int posX, int posY, char color, String[][] label){
+    public Tile(int posX, int posY){
         this.posX = posX;
         this.posY = posY;
-        this.color = color;
-        this.label = label;
     }
 
     public int getPosX() {
@@ -17,7 +14,11 @@ public class Tile {
         return posY;
     }
 
-    public char getColor() {
-        return color;
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
     }
 }
