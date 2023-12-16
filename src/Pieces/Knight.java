@@ -2,11 +2,11 @@ package Pieces;
 
 import javax.imageio.ImageIO;
 import java.io.File;
+import utils.Range;
 
 public class Knight extends Piece {
     public Knight(int posX, int posY, char team){
-        this.posX = posX;
-        this.posY = posY;
+        super(posX, posY, team);
         try{
             if (team == 'b') {
                 this.image = ImageIO.read(new File("src/images/black-knight.png"));

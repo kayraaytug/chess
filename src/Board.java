@@ -1,17 +1,56 @@
 import Pieces.*;
+import utils.Range;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Board extends JPanel {
     public static final int WIDTH = 800;
     public static final int HEIGHT = 800;
     public Tile[][] tiles = new Tile[8][8];
     public Piece[][] pieces = new Piece[8][8];
+    public boolean clickedOnPiece = false;
+    public Piece lastClickedPiece;
+    public Tile lastClickedTile;
 
     public Board(){
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.BLACK);
+
+        // Insane logic incoming
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                if(clickedOnPiece){
+                    for (int i = 0; i<8; i++){
+                        for (int j = 0; j<8; j++){
+                            if (tiles[i][j].clickArea.contains(x,y)){
+                                lastClickedTile = tiles[i][j];
+                            }
+                        }
+                    }
+                    lastClickedPiece.posX = lastClickedTile.getPosX();
+                    lastClickedPiece.posY = lastClickedTile.getPosY();
+                    lastClickedPiece.clickArea.update(lastClickedTile.getPosX(),lastClickedTile.getPosY());
+                    clickedOnPiece = false;
+                }
+                else {
+                    for (int i = 0; i<8; i++){
+                        for (int j = 0; j<8; j++){
+                            if (pieces[i][j].clickArea.contains(x,y) && pieces[i][j].team != 'e'){
+                                lastClickedPiece = pieces[i][j];
+                                clickedOnPiece = true;
+                            }
+                        }
+                    }
+                }
+                repaint();
+            }
+        });
 
         // Initialize tiles
         int xStart = 0, yStart = 0;
@@ -56,7 +95,7 @@ public class Board extends JPanel {
         // Defining empty spaces because of null pointer exception
         for (int i = 2; i<6; i++){
             for (int j = 0; j<8; j++){
-                pieces[i][j] = new Empty();
+                pieces[i][j] = new Empty(tiles[i][j].getPosX(),tiles[i][j].getPosY(),'e');
             }
         }
 
@@ -95,6 +134,7 @@ public class Board extends JPanel {
                 }
             }
         }
+        System.out.println("Pieces drawn");
     }
     public void paintComponent(Graphics g){
         drawBoard(g);

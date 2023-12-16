@@ -5,8 +5,7 @@ import java.io.File;
 
 public class Bishop extends Piece {
     public Bishop(int posX, int posY, char team){
-        this.posX = posX;
-        this.posY = posY;
+        super(posX, posY, team);
         try{
             if (team == 'b') {
                 this.image = ImageIO.read(new File("src/images/black-bishop.png"));
