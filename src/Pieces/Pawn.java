@@ -8,9 +8,11 @@ public class Pawn extends Piece {
         super(posX, posY, team);
         try{
             if (team == 'b') {
+                this.label = 'P';
                 this.image = ImageIO.read(new File("src/images/black-pawn.png"));
             }
             else{
+                this.label = 'p';
                 this.image = ImageIO.read(new File("src/images/white-pawn.png"));
             }
         }
