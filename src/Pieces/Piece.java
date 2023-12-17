@@ -1,7 +1,6 @@
 package Pieces;
 import java.awt.image.BufferedImage;
 
-
 public class Piece   {
     public int posX, posY;
     public char team;

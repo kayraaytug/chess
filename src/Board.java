@@ -5,12 +5,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Board extends JPanel {
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 800;
-    public Tile[][] tiles = new Tile[8][8];
-    public Piece[][] pieces = new Piece[8][8];
-    public boolean clickedOnPiece = false;
-    public Piece lastClickedPiece;
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 800;
+    private Tile[][] tiles = new Tile[8][8];
+    private Piece[][] pieces = new Piece[8][8];
+    private boolean clickedOnPiece = false;
+    private Piece lastClickedPiece;
     private Piece lastClickedTile;
     private int arrayPointerX, arrayPointerY;
     public Board(){
