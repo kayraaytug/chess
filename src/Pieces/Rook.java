@@ -8,9 +8,11 @@ public class Rook extends Piece {
         super(posX, posY, team);
         try{
             if (team == 'b') {
+                this.label = 'R';
                 this.image = ImageIO.read(new File("src/images/black-rook.png"));
             }
             else{
+                this.label = 'r';
                 this.image = ImageIO.read(new File("src/images/white-rook.png"));
             }
         }

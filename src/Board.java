@@ -1,6 +1,4 @@
 import Pieces.*;
-import utils.Range;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -13,44 +11,11 @@ public class Board extends JPanel {
     public Piece[][] pieces = new Piece[8][8];
     public boolean clickedOnPiece = false;
     public Piece lastClickedPiece;
-    public Tile lastClickedTile;
-
+    private Piece lastClickedTile;
+    private int arrayPointerX, arrayPointerY;
     public Board(){
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.BLACK);
-
-        // Insane logic incoming
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int x = e.getX();
-                int y = e.getY();
-                if(clickedOnPiece){
-                    for (int i = 0; i<8; i++){
-                        for (int j = 0; j<8; j++){
-                            if (tiles[i][j].clickArea.contains(x,y)){
-                                lastClickedTile = tiles[i][j];
-                            }
-                        }
-                    }
-                    lastClickedPiece.posX = lastClickedTile.getPosX();
-                    lastClickedPiece.posY = lastClickedTile.getPosY();
-                    lastClickedPiece.clickArea.update(lastClickedTile.getPosX(),lastClickedTile.getPosY());
-                    clickedOnPiece = false;
-                }
-                else {
-                    for (int i = 0; i<8; i++){
-                        for (int j = 0; j<8; j++){
-                            if (pieces[i][j].clickArea.contains(x,y) && pieces[i][j].team != 'e'){
-                                lastClickedPiece = pieces[i][j];
-                                clickedOnPiece = true;
-                            }
-                        }
-                    }
-                }
-                repaint();
-            }
-        });
 
         // Initialize tiles
         int xStart = 0, yStart = 0;
@@ -64,6 +29,7 @@ public class Board extends JPanel {
         }
 
         // Initialize board
+
         // Black pieces
         pieces[0][0] = new Rook(tiles[0][0].getPosX(), tiles[0][0].getPosY(),'b');
         pieces[0][1] = new Knight(tiles[0][1].getPosX(), tiles[0][1].getPosY(),'b');
@@ -92,13 +58,56 @@ public class Board extends JPanel {
             pieces[6][i] = new Pawn(tiles[6][i].getPosX(), tiles[6][i].getPosY(),'w');
         }
 
-        // Defining empty spaces because of null pointer exception
+        // Defining empty spaces
         for (int i = 2; i<6; i++){
             for (int j = 0; j<8; j++){
                 pieces[i][j] = new Empty(tiles[i][j].getPosX(),tiles[i][j].getPosY(),'e');
             }
         }
 
+        // Insane logic incoming
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                // Get index of pieces[y][x]
+                int x = e.getX()/100;
+                int y = e.getY()/100;
+
+                // Check if last clicked area contains a piece and next click will be on Empty,
+                // This is currently prevents capturing, will be replaced later.
+                if (clickedOnPiece && pieces[y][x] instanceof Empty){
+
+                    // Empty the last clicked tile
+                    pieces[arrayPointerY][arrayPointerX] = new Empty(lastClickedTile.posX, lastClickedTile.posY, 'e');
+
+                    // Update the clicked pieces position
+                    lastClickedPiece.posX = pieces[y][x].posX;
+                    lastClickedPiece.posY = pieces[y][x].posY;
+
+                    // Update it in array
+                    pieces[y][x] = lastClickedPiece;
+
+                    // Swap click operation
+                    clickedOnPiece = false;
+                }
+
+                else if (!(pieces[y][x] instanceof Empty)) { // If clicked on piece
+
+                    lastClickedPiece = pieces[y][x];    // Reference for clicked piece
+                    lastClickedTile = lastClickedPiece; // Make a copy of it for swap operation
+                    arrayPointerX = x;                  // Reference for the array index x and y
+                    arrayPointerY = y;
+                    clickedOnPiece = true;              // Swap click operation
+                }
+
+                System.out.println("Clicked on: " + pieces[y][x]);
+                System.out.println("y: " + y + ", x: " + x);
+
+                // Repaint the board and pieces
+                repaint();
+            }
+        });
     }
 
     public void drawBoard(Graphics g){

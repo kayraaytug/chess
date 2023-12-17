@@ -8,9 +8,11 @@ public class Queen extends Piece {
         super(posX, posY, team);
         try{
             if (team == 'b') {
+                this.label = 'Q';
                 this.image = ImageIO.read(new File("src/images/black-queen.png"));
             }
             else{
+                this.label = 'q';
                 this.image = ImageIO.read(new File("src/images/white-queen.png"));
             }
         }

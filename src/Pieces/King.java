@@ -8,9 +8,11 @@ public class King extends Piece {
         super(posX, posY, team);
         try{
             if (team == 'b') {
+                this.label = 'K';
                 this.image = ImageIO.read(new File("src/images/black-king.png"));
             }
             else{
+                this.label = 'k';
                 this.image = ImageIO.read(new File("src/images/white-king.png"));
             }
         }

@@ -6,11 +6,14 @@ import java.io.File;
 public class Bishop extends Piece {
     public Bishop(int posX, int posY, char team){
         super(posX, posY, team);
+
         try{
             if (team == 'b') {
+                this.label = 'B';
                 this.image = ImageIO.read(new File("src/images/black-bishop.png"));
             }
             else{
+                this.label = 'b';
                 this.image = ImageIO.read(new File("src/images/white-bishop.png"));
             }
         }
