@@ -6,6 +6,7 @@ import java.io.File;
 public class Bishop extends Piece {
     public Bishop(int posX, int posY, char team){
         super(posX, posY, team);
+        this.moveType.add("DIAGONAL");
 
         try{
             if (team == 'b') {

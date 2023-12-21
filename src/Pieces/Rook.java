@@ -6,6 +6,8 @@ import java.io.File;
 public class Rook extends Piece {
     public Rook(int posX, int posY, char team){
         super(posX, posY, team);
+        this.moveType.add("VERTICAL");
+        this.moveType.add("HORIZONTAL");
         try{
             if (team == 'b') {
                 this.label = 'R';

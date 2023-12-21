@@ -6,6 +6,10 @@ import java.io.File;
 public class Queen extends Piece {
     public Queen(int posX, int posY, char team){
         super(posX, posY, team);
+        this.moveLimit = 7;
+        this.moveType.add("DIAGONAL");
+        this.moveType.add("VERTICAL");
+        this.moveType.add("HORIZONTAL");
         try{
             if (team == 'b') {
                 this.label = 'Q';

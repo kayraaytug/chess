@@ -6,6 +6,9 @@ import java.io.File;
 public class Pawn extends Piece {
     public Pawn(int posX, int posY, char team){
         super(posX, posY, team);
+        this.moveLimit = 2;
+        this.moveType.add("DIAGONAL");
+        this.moveType.add("VERTICAL");
         try{
             if (team == 'b') {
                 this.label = 'P';

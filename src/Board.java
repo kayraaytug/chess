@@ -3,25 +3,31 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
 
 public class Board extends JPanel {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 800;
+
+
     private Tile[][] tiles = new Tile[8][8];
     private Piece[][] pieces = new Piece[8][8];
     private boolean clickedOnPiece = false;
     private Piece lastClickedPiece;
-    private Piece lastClickedTile;
-    private int arrayPointerX, arrayPointerY;
-    public Board(){
+    ArrayList<Piece> highlightedTiles;
+
+    public Board() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.BLACK);
 
         // Initialize tiles
         int xStart = 0, yStart = 0;
-        for (int i = 0; i<8; i++){
-            for (int j = 0; j<8; j++){
-                tiles[i][j] = new Tile(xStart, yStart);
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                tiles[j][i] = new Tile(xStart, yStart);
                 xStart += 100;
             }
             xStart = 0;
@@ -31,122 +37,120 @@ public class Board extends JPanel {
         // Initialize board
 
         // Black pieces
-        pieces[0][0] = new Rook(tiles[0][0].getPosX(), tiles[0][0].getPosY(),'b');
-        pieces[0][1] = new Knight(tiles[0][1].getPosX(), tiles[0][1].getPosY(),'b');
-        pieces[0][2] = new Bishop(tiles[0][2].getPosX(), tiles[0][2].getPosY(),'b');
-        pieces[0][3] = new King(tiles[0][3].getPosX(), tiles[0][3].getPosY(),'b');
-        pieces[0][4] = new Queen(tiles[0][4].getPosX(), tiles[0][4].getPosY(),'b');
-        pieces[0][5] = new Bishop(tiles[0][5].getPosX(), tiles[0][5].getPosY(),'b');
-        pieces[0][6] = new Knight(tiles[0][6].getPosX(), tiles[0][6].getPosY(),'b');
-        pieces[0][7] = new Rook(tiles[0][7].getPosX(), tiles[0][7].getPosY(),'b');
+        pieces[0][0] = new Rook(tiles[0][0].getPosX(), tiles[0][0].getPosY(), 'b');
+        pieces[1][0] = new Knight(tiles[1][0].getPosX(), tiles[1][0].getPosY(), 'b');
+        pieces[2][0] = new Bishop(tiles[2][0].getPosX(), tiles[2][0].getPosY(), 'b');
+        pieces[3][0] = new King(tiles[3][0].getPosX(), tiles[3][0].getPosY(), 'b');
+        pieces[4][0] = new Queen(tiles[4][4].getPosX(), tiles[4][0].getPosY(), 'b');
+        pieces[5][0] = new Bishop(tiles[5][0].getPosX(), tiles[5][0].getPosY(), 'b');
+        pieces[6][0] = new Knight(tiles[6][0].getPosX(), tiles[6][0].getPosY(), 'b');
+        pieces[7][0] = new Rook(tiles[7][0].getPosX(), tiles[7][0].getPosY(), 'b');
 
-        for (int i = 0; i < 8; i++){
-            pieces[1][i] = new Pawn(tiles[1][i].getPosX(), tiles[1][i].getPosY(),'b');
+        for (int i = 0; i < 8; i++) {
+            pieces[i][1] = new Pawn(tiles[i][1].getPosX(), tiles[i][1].getPosY(), 'b');
         }
 
         // White pieces
-        pieces[7][0] = new Rook(tiles[7][0].getPosX(), tiles[7][0].getPosY(),'w');
-        pieces[7][1] = new Knight(tiles[7][1].getPosX(), tiles[7][1].getPosY(),'w');
-        pieces[7][2] = new Bishop(tiles[7][2].getPosX(), tiles[7][2].getPosY(),'w');
-        pieces[7][3] = new King(tiles[7][3].getPosX(), tiles[7][3].getPosY(),'w');
-        pieces[7][4] = new Queen(tiles[7][4].getPosX(), tiles[7][4].getPosY(),'w');
-        pieces[7][5] = new Bishop(tiles[7][5].getPosX(), tiles[7][5].getPosY(),'w');
-        pieces[7][6] = new Knight(tiles[7][6].getPosX(), tiles[7][6].getPosY(),'w');
-        pieces[7][7] = new Rook(tiles[7][7].getPosX(), tiles[7][7].getPosY(),'w');
+        pieces[0][7] = new Rook(tiles[0][7].getPosX(), tiles[0][7].getPosY(), 'w');
+        pieces[1][7] = new Knight(tiles[1][7].getPosX(), tiles[1][7].getPosY(), 'w');
+        pieces[2][7] = new Bishop(tiles[2][7].getPosX(), tiles[2][7].getPosY(), 'w');
+        pieces[3][7] = new King(tiles[3][7].getPosX(), tiles[3][7].getPosY(), 'w');
+        pieces[4][7] = new Queen(tiles[4][7].getPosX(), tiles[4][7].getPosY(), 'w');
+        pieces[5][7] = new Bishop(tiles[5][7].getPosX(), tiles[5][7].getPosY(), 'w');
+        pieces[6][7] = new Knight(tiles[6][7].getPosX(), tiles[6][7].getPosY(), 'w');
+        pieces[7][7] = new Rook(tiles[7][7].getPosX(), tiles[7][7].getPosY(), 'w');
 
-        for (int i = 0; i < 8; i++){
-            pieces[6][i] = new Pawn(tiles[6][i].getPosX(), tiles[6][i].getPosY(),'w');
+        for (int i = 0; i < 8; i++) {
+            pieces[i][6] = new Pawn(tiles[i][6].getPosX(), tiles[i][6].getPosY(), 'w');
         }
 
         // Defining empty spaces
-        for (int i = 2; i<6; i++){
-            for (int j = 0; j<8; j++){
-                pieces[i][j] = new Empty(tiles[i][j].getPosX(),tiles[i][j].getPosY(),'e');
+        for (int i = 2; i < 6; i++) {
+            for (int j = 0; j < 8; j++) {
+                pieces[j][i] = new Empty(tiles[j][i].getPosX(), tiles[j][i].getPosY(), 'e');
             }
         }
+
+        Move mover = new Move(pieces);
 
         // Insane logic incoming
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                // Get index of pieces[y][x]
-                int x = e.getX()/100;
-                int y = e.getY()/100;
-
-                // Check if last clicked area contains a piece and next click will be on Empty,
-                // This is currently prevents capturing, will be replaced later.
-                if (clickedOnPiece && pieces[y][x] instanceof Empty){
-
-                    // Empty the last clicked tile
-                    pieces[arrayPointerY][arrayPointerX] = new Empty(lastClickedTile.posX, lastClickedTile.posY, 'e');
-
-                    // Update the clicked pieces position
-                    lastClickedPiece.posX = pieces[y][x].posX;
-                    lastClickedPiece.posY = pieces[y][x].posY;
-
-                    // Update it in array
-                    pieces[y][x] = lastClickedPiece;
-
-                    // Swap click operation
-                    clickedOnPiece = false;
+                // Get index of pieces[x][y]
+                int x = e.getX() / 100;
+                int y = e.getY() / 100;
+                if (pieces[x][y] instanceof Empty){
+                    lastClickedPiece = null;
+                    highlightedTiles = null;
                 }
-
-                else if (!(pieces[y][x] instanceof Empty)) { // If clicked on piece
-
-                    lastClickedPiece = pieces[y][x];    // Reference for clicked piece
-                    lastClickedTile = lastClickedPiece; // Make a copy of it for swap operation
-                    arrayPointerX = x;                  // Reference for the array index x and y
-                    arrayPointerY = y;
-                    clickedOnPiece = true;              // Swap click operation
+                else {
+                    lastClickedPiece = pieces[x][y];
                 }
-
-                System.out.println("Clicked on: " + pieces[y][x]);
-                System.out.println("y: " + y + ", x: " + x);
-
+                System.out.println("Piece: " + pieces[x][y]);
+                var moves = mover.GenerateAllMoves(pieces[x][y]);
+                highlightedTiles = moves;
+                for (var move: moves) {
+                    System.out.println(move.positionOnBoardX + "," + move.positionOnBoardY);
+                }
+                System.out.println(NotationConverter.ConvertToNotaion(pieces));
                 // Repaint the board and pieces
                 repaint();
             }
         });
     }
 
-    public void drawBoard(Graphics g){
+    public void drawBoard(Graphics g) {
         int c = 0;
-        for (int i = 0; i<8; i++){
-            for (int j = 0; j < 8; j++){
-                if(c == 0){
-                    g.setColor(new Color(184,139,74));
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (c == 0) {
+                    g.setColor(new Color(118,150,86));
                     c = 1;
-                }
-                else {
-                    g.setColor(new Color(227,193,111));
+                } else {
+                    g.setColor(new Color(238,238,210));
                     c = 0;
                 }
                 g.fillRect(tiles[i][j].getPosX(), tiles[i][j].getPosY(), 100, 100);
             }
-            if (c == 0){
+            if (c == 0) {
                 c = 1;
-            }
-            else{
+            } else {
                 c = 0;
             }
         }
     }
 
-    public void drawPieces(Graphics g){
+    public void drawPossibleMoves(Graphics g){
+        if (highlightedTiles != null){
+            for (var tile: highlightedTiles) {
+                g.setColor(new Color(186,202,68));
+                g.fillRect(lastClickedPiece.posX, lastClickedPiece.posY, 100,100);
+                g.setColor(new Color(255, 100, 100));
+                g.fillRect(tile.posX, tile.posY, 100, 100);
+                g.setColor(Color.darkGray);
+                g.drawRect(tile.posX, tile.posY, 100, 100);
+            }
+        }
+    }
 
-        for (int i = 0; i<8; i++){
-            for(int j = 0; j<8; j++){
-                if (pieces[i][j].image != null){
-                    g.drawImage(pieces[i][j].image, pieces[i][j].posX+10, pieces[i][j].posY+10,80, 80,
+    public void drawPieces(Graphics g) {
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (pieces[i][j] != null) {
+                    g.drawImage(pieces[i][j].image, pieces[i][j].posX + 10, pieces[i][j].posY + 10, 80, 80,
                             null);
                 }
             }
         }
-        System.out.println("Pieces drawn");
     }
+
+
     public void paintComponent(Graphics g){
         drawBoard(g);
+        drawPossibleMoves(g);
         drawPieces(g);
     }
 }
