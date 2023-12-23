@@ -191,7 +191,9 @@ public class Move {
 
             for (int[] offset : moveOffsets) {
                 try {
-                    this.possibleMoves.add(pieces[x + offset[0]][y + offset[1]]);
+                    if(pieces[x + offset[0]][y + offset[1]].team != piece.team){
+                        this.possibleMoves.add(pieces[x + offset[0]][y + offset[1]]);
+                    }
                 }
 
                 catch (ArrayIndexOutOfBoundsException ignore) {
@@ -251,7 +253,6 @@ public class Move {
         piece.posY = target.posY;
         pieces[target.positionOnBoardX][target.positionOnBoardY] = piece;
         pieces[tempTile.positionOnBoardX][tempTile.positionOnBoardY] = tempTile;
-
 
     }
 }
