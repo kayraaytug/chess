@@ -1,13 +1,19 @@
 import Pieces.*;
+import java.io.File;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import utils.mp3Player;
 
 public class Board extends JPanel {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 800;
+    private static final int TILE_SIZE = WIDTH/8;
 
 
     private Tile[][] tiles = new Tile[8][8];
@@ -16,23 +22,24 @@ public class Board extends JPanel {
     private Piece lastClickedPiece;
     ArrayList<Piece> highlightedTiles;
 
+
     public Board() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.BLACK);
+        mp3Player walkman = new mp3Player();
 
         // Initialize tiles
         int xStart = 0, yStart = 0;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 tiles[j][i] = new Tile(xStart, yStart);
-                xStart += 100;
+                xStart += TILE_SIZE;
             }
             xStart = 0;
-            yStart += 100;
+            yStart += TILE_SIZE;
         }
 
         // Initialize board
-
         // Black pieces
         pieces[0][0] = new Rook(tiles[0][0].getPosX(), tiles[0][0].getPosY(), 'b');
         pieces[1][0] = new Knight(tiles[1][0].getPosX(), tiles[1][0].getPosY(), 'b');
@@ -76,14 +83,21 @@ public class Board extends JPanel {
             public void mouseClicked(MouseEvent e) {
 
                 // Get index of pieces[x][y]
-                int x = e.getX() / 100;
-                int y = e.getY() / 100;
+                int x = e.getX() / TILE_SIZE;
+                int y = e.getY() / TILE_SIZE;
 
                 if (lastClickedPiece != null && pieces[x][y].team != lastClickedPiece.team){
 
                     // If clicked tile in the possible moves list, allow to move
                     if (highlightedTiles.contains(pieces[x][y])) {
+                        if (pieces[x][y] instanceof Empty){
+                            walkman.playMoveSound();
+                        }
+                        else {
+                            walkman.playCaptureSound();;
+                        }
                         mover.movePiece(lastClickedPiece, pieces[x][y]);
+
                     }
                     highlightedTiles = null;
                     lastClickedPiece = null;
@@ -115,7 +129,7 @@ public class Board extends JPanel {
                     g.setColor(new Color(238,238,210));
                     c = 0;
                 }
-                g.fillRect(tiles[i][j].getPosX(), tiles[i][j].getPosY(), 100, 100);
+                g.fillRect(tiles[i][j].getPosX(), tiles[i][j].getPosY(), TILE_SIZE, TILE_SIZE);
             }
             if (c == 0) {
                 c = 1;
@@ -129,11 +143,11 @@ public class Board extends JPanel {
         if (highlightedTiles != null){
             for (var tile: highlightedTiles) {
                 g.setColor(new Color(186,202,68));
-                g.fillRect(lastClickedPiece.posX, lastClickedPiece.posY, 100,100);
+                g.fillRect(lastClickedPiece.posX, lastClickedPiece.posY, TILE_SIZE,TILE_SIZE);
                 g.setColor(new Color(255, 100, 100));
-                g.fillRect(tile.posX, tile.posY, 100, 100);
+                g.fillRect(tile.posX, tile.posY, TILE_SIZE, TILE_SIZE);
                 g.setColor(Color.darkGray);
-                g.drawRect(tile.posX, tile.posY, 100, 100);
+                g.drawRect(tile.posX, tile.posY, TILE_SIZE, TILE_SIZE);
             }
         }
     }
