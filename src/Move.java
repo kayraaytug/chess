@@ -237,34 +237,11 @@ public class Move {
             if (piece.moveType.contains("DIAGONAL")){
                 generateDiagonalMoves(piece);
             }
-            //DetectCollision(piece);
             return this.possibleMoves;
         }
     }
 
     public void movePiece(Piece piece, Piece target){
-        //var piece_x_index = piece.positionOnBoardX;
-        //var piece_y_index = piece.positionOnBoardY;
-        //var piece_pos_x = piece.posX;
-        //var piece_pos_y = piece.posY;
-//
-        //var target_x_index = target.positionOnBoardX;
-        //var target_y_index = target.positionOnBoardY;
-        //var target_pos_x = target.posX;
-        //var target_pos_y = target.posY;
-//
-        //piece.positionOnBoardX = target_x_index;
-        //piece.positionOnBoardY = target_y_index;
-        //piece.posX = target_pos_x;
-        //piece.posY = target_pos_y;
-//
-        //target.positionOnBoardX = piece_x_index;
-        //target.positionOnBoardY = piece_y_index;
-        //target.posX = piece_pos_x;
-        //target.posY = piece_pos_y;
-//
-        //pieces[target_x_index][target_y_index] = piece;
-        //pieces[piece_x_index][piece_y_index] = target;
         Piece tempTile = new Empty(piece.posX, piece.posY, 'e');
         tempTile.positionOnBoardX = piece.positionOnBoardX;
         tempTile.positionOnBoardY = piece.positionOnBoardY;
