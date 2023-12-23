@@ -4,9 +4,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-
 
 public class Board extends JPanel {
     private static final int WIDTH = 800;
@@ -81,19 +78,25 @@ public class Board extends JPanel {
                 // Get index of pieces[x][y]
                 int x = e.getX() / 100;
                 int y = e.getY() / 100;
-                if (pieces[x][y] instanceof Empty){
-                    lastClickedPiece = null;
+
+                if (lastClickedPiece != null && pieces[x][y].team != lastClickedPiece.team){
+
+                    // If clicked tile in the possible moves list, allow to move
+                    if (highlightedTiles.contains(pieces[x][y])) {
+                        mover.movePiece(lastClickedPiece, pieces[x][y]);
+                    }
                     highlightedTiles = null;
+                    lastClickedPiece = null;
                 }
-                else {
+
+                // If clicked on piece generate all possible moves and show it, store the clicked piece
+                else if (!(pieces[x][y] instanceof Empty)) {
                     lastClickedPiece = pieces[x][y];
+                    var moves = mover.GenerateAllMoves(lastClickedPiece);
+                    highlightedTiles = moves;
                 }
+
                 System.out.println("Piece: " + pieces[x][y]);
-                var moves = mover.GenerateAllMoves(pieces[x][y]);
-                highlightedTiles = moves;
-                for (var move: moves) {
-                    System.out.println(move.positionOnBoardX + "," + move.positionOnBoardY);
-                }
                 System.out.println(NotationConverter.ConvertToNotaion(pieces));
                 // Repaint the board and pieces
                 repaint();
