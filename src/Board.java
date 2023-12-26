@@ -6,15 +6,32 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class Board extends JPanel {
+
+    // If you change dimensions you need to make corrections to piece dimensions too.
     private static final int WIDTH = 800;
     private static final int HEIGHT = 800;
 
-
+    // 2D matrix to store tile positions.
     private Tile[][] tiles = new Tile[8][8];
+
+    // 2D matrix to store all piece information.
     private Piece[][] pieces = new Piece[8][8];
+
+    // Required for mouse click operations.
     private boolean clickedOnPiece = false;
     private Piece lastClickedPiece;
+
+    // To store highlighted tile objects.
     ArrayList<Piece> highlightedTiles;
+
+    // To store the king positions
+    Piece whiteKing;
+    Piece blackKing;
+
+    // To control check and mate
+    private boolean whiteKingChecked = false;
+    private boolean blackKingChecked = true;
+
 
     public Board() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -42,6 +59,7 @@ public class Board extends JPanel {
         pieces[5][0] = new Bishop(tiles[5][0].getPosX(), tiles[5][0].getPosY(), 'b');
         pieces[6][0] = new Knight(tiles[6][0].getPosX(), tiles[6][0].getPosY(), 'b');
         pieces[7][0] = new Rook(tiles[7][0].getPosX(), tiles[7][0].getPosY(), 'b');
+        this.blackKing = pieces[3][0];
 
         for (int i = 0; i < 8; i++) {
             pieces[i][1] = new Pawn(tiles[i][1].getPosX(), tiles[i][1].getPosY(), 'b');
@@ -56,6 +74,7 @@ public class Board extends JPanel {
         pieces[5][7] = new Bishop(tiles[5][7].getPosX(), tiles[5][7].getPosY(), 'w');
         pieces[6][7] = new Knight(tiles[6][7].getPosX(), tiles[6][7].getPosY(), 'w');
         pieces[7][7] = new Rook(tiles[7][7].getPosX(), tiles[7][7].getPosY(), 'w');
+        this.whiteKing = pieces[3][7];
 
         for (int i = 0; i < 8; i++) {
             pieces[i][6] = new Pawn(tiles[i][6].getPosX(), tiles[i][6].getPosY(), 'w');
@@ -69,6 +88,7 @@ public class Board extends JPanel {
         }
 
         Move mover = new Move(pieces);
+        Move mover2 = new Move(pieces);
 
         // Insane logic incoming
         addMouseListener(new MouseAdapter() {
@@ -98,6 +118,9 @@ public class Board extends JPanel {
 
                 System.out.println("Piece: " + pieces[x][y]);
                 System.out.println(NotationConverter.ConvertToNotaion(pieces));
+                blackKingChecked = mover2.isInCheck(blackKing);
+                whiteKingChecked = mover2.isInCheck(whiteKing);
+
                 // Repaint the board and pieces
                 repaint();
             }

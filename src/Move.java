@@ -255,4 +255,21 @@ public class Move {
         pieces[tempTile.positionOnBoardX][tempTile.positionOnBoardY] = tempTile;
 
     }
+
+    public boolean isInCheck(Piece king){
+        // Check if a king is in check
+        for (int i = 0; i<8; i++){
+            for (int j = 0; j<8; j++){
+                if (!(pieces[i][j] instanceof Empty) && pieces[i][j].team != king.team){
+                    var posMoves = GenerateAllMoves(pieces[i][j]);
+                    if(posMoves.contains(king)){
+                        System.out.println(king.team + " is in check.");
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }
