@@ -1,55 +1,45 @@
 import Pieces.*;
+import java.io.File;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import utils.mp3Player;
 
 public class Board extends JPanel {
-
-    // If you change dimensions you need to make corrections to piece dimensions too.
     private static final int WIDTH = 800;
     private static final int HEIGHT = 800;
+    private static final int TILE_SIZE = WIDTH/8;
 
-    // 2D matrix to store tile positions.
+
     private Tile[][] tiles = new Tile[8][8];
-
-    // 2D matrix to store all piece information.
     private Piece[][] pieces = new Piece[8][8];
-
-    // Required for mouse click operations.
     private boolean clickedOnPiece = false;
     private Piece lastClickedPiece;
-
-    // To store highlighted tile objects.
     ArrayList<Piece> highlightedTiles;
-
-    // To store the king positions
-    Piece whiteKing;
-    Piece blackKing;
-
-    // To control check and mate
-    private boolean whiteKingChecked = false;
-    private boolean blackKingChecked = true;
 
 
     public Board() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.BLACK);
+        mp3Player walkman = new mp3Player();
 
         // Initialize tiles
         int xStart = 0, yStart = 0;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 tiles[j][i] = new Tile(xStart, yStart);
-                xStart += 100;
+                xStart += TILE_SIZE;
             }
             xStart = 0;
-            yStart += 100;
+            yStart += TILE_SIZE;
         }
 
         // Initialize board
-
         // Black pieces
         pieces[0][0] = new Rook(tiles[0][0].getPosX(), tiles[0][0].getPosY(), 'b');
         pieces[1][0] = new Knight(tiles[1][0].getPosX(), tiles[1][0].getPosY(), 'b');
@@ -59,7 +49,6 @@ public class Board extends JPanel {
         pieces[5][0] = new Bishop(tiles[5][0].getPosX(), tiles[5][0].getPosY(), 'b');
         pieces[6][0] = new Knight(tiles[6][0].getPosX(), tiles[6][0].getPosY(), 'b');
         pieces[7][0] = new Rook(tiles[7][0].getPosX(), tiles[7][0].getPosY(), 'b');
-        this.blackKing = pieces[3][0];
 
         for (int i = 0; i < 8; i++) {
             pieces[i][1] = new Pawn(tiles[i][1].getPosX(), tiles[i][1].getPosY(), 'b');
@@ -74,7 +63,6 @@ public class Board extends JPanel {
         pieces[5][7] = new Bishop(tiles[5][7].getPosX(), tiles[5][7].getPosY(), 'w');
         pieces[6][7] = new Knight(tiles[6][7].getPosX(), tiles[6][7].getPosY(), 'w');
         pieces[7][7] = new Rook(tiles[7][7].getPosX(), tiles[7][7].getPosY(), 'w');
-        this.whiteKing = pieces[3][7];
 
         for (int i = 0; i < 8; i++) {
             pieces[i][6] = new Pawn(tiles[i][6].getPosX(), tiles[i][6].getPosY(), 'w');
@@ -88,7 +76,6 @@ public class Board extends JPanel {
         }
 
         Move mover = new Move(pieces);
-        Move mover2 = new Move(pieces);
 
         // Insane logic incoming
         addMouseListener(new MouseAdapter() {
@@ -96,14 +83,21 @@ public class Board extends JPanel {
             public void mouseClicked(MouseEvent e) {
 
                 // Get index of pieces[x][y]
-                int x = e.getX() / 100;
-                int y = e.getY() / 100;
+                int x = e.getX() / TILE_SIZE;
+                int y = e.getY() / TILE_SIZE;
 
                 if (lastClickedPiece != null && pieces[x][y].team != lastClickedPiece.team){
 
                     // If clicked tile in the possible moves list, allow to move
                     if (highlightedTiles.contains(pieces[x][y])) {
+                        if (pieces[x][y] instanceof Empty){
+                            walkman.playMoveSound();
+                        }
+                        else {
+                            walkman.playCaptureSound();;
+                        }
                         mover.movePiece(lastClickedPiece, pieces[x][y]);
+
                     }
                     highlightedTiles = null;
                     lastClickedPiece = null;
@@ -118,9 +112,6 @@ public class Board extends JPanel {
 
                 System.out.println("Piece: " + pieces[x][y]);
                 System.out.println(NotationConverter.ConvertToNotaion(pieces));
-                blackKingChecked = mover2.isInCheck(blackKing);
-                whiteKingChecked = mover2.isInCheck(whiteKing);
-
                 // Repaint the board and pieces
                 repaint();
             }
@@ -138,7 +129,7 @@ public class Board extends JPanel {
                     g.setColor(new Color(238,238,210));
                     c = 0;
                 }
-                g.fillRect(tiles[i][j].getPosX(), tiles[i][j].getPosY(), 100, 100);
+                g.fillRect(tiles[i][j].getPosX(), tiles[i][j].getPosY(), TILE_SIZE, TILE_SIZE);
             }
             if (c == 0) {
                 c = 1;
@@ -152,11 +143,11 @@ public class Board extends JPanel {
         if (highlightedTiles != null){
             for (var tile: highlightedTiles) {
                 g.setColor(new Color(186,202,68));
-                g.fillRect(lastClickedPiece.posX, lastClickedPiece.posY, 100,100);
+                g.fillRect(lastClickedPiece.posX, lastClickedPiece.posY, TILE_SIZE,TILE_SIZE);
                 g.setColor(new Color(255, 100, 100));
-                g.fillRect(tile.posX, tile.posY, 100, 100);
+                g.fillRect(tile.posX, tile.posY, TILE_SIZE, TILE_SIZE);
                 g.setColor(Color.darkGray);
-                g.drawRect(tile.posX, tile.posY, 100, 100);
+                g.drawRect(tile.posX, tile.posY, TILE_SIZE, TILE_SIZE);
             }
         }
     }
