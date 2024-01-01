@@ -22,6 +22,7 @@ public class Board extends JPanel {
 
     private boolean whiteKingInCheck;
     private boolean blackKingInCheck;
+    private boolean gameContinues = true;
 
     private int turn = 0;
 
@@ -84,50 +85,84 @@ public class Board extends JPanel {
 
         // Insane logic incoming
         addMouseListener(new MouseAdapter() {
+
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (gameContinues){
 
-                // Get index of pieces[x][y]
-                int x = e.getX() / TILE_SIZE;
-                int y = e.getY() / TILE_SIZE;
+                    // Get index of pieces[x][y]
+                    int x = e.getX() / TILE_SIZE;
+                    int y = e.getY() / TILE_SIZE;
 
-                if((whiteKingInCheck && mover2.GenerateAllMoves(whiteKing).isEmpty())
-                        || blackKingInCheck && mover2.GenerateAllMoves(blackKing).isEmpty()){
-                    // game ends here
-                    System.out.println("Game ends");
-                }
-
-                if (lastClickedPiece != null && pieces[x][y].team != lastClickedPiece.team){
+                    // Game ends
+                    if((whiteKingInCheck && mover2.GenerateAllMoves(whiteKing).isEmpty())
+                            || blackKingInCheck && mover2.GenerateAllMoves(blackKing).isEmpty()){
+                        System.out.println("Game ends");
+                        gameContinues = false;
+                    }
 
                     // If clicked tile in the possible moves list, allow to move
-                    if (highlightedTiles.contains(pieces[x][y])) {
-                        if (pieces[x][y] instanceof Empty){
-                            walkman.playMoveSound();
-                        }
-                        else {
-                            walkman.playCaptureSound();
-                        }
-                        mover.movePiece(lastClickedPiece, pieces[x][y]);
+                    if (lastClickedPiece != null && pieces[x][y].team != lastClickedPiece.team){
 
+                        if (highlightedTiles.contains(pieces[x][y])) {
+                            if (pieces[x][y] instanceof Empty){
+                                walkman.playMoveSound();
+                            }
+                            else {
+                                walkman.playCaptureSound();
+                            }
+
+                            //if(whiteKingInCheck){
+                            //    var nextBoard = pieces.clone();
+                            //    var tempMover = new Move(nextBoard);
+                            //    try {
+                            //        var tempLastClickedPiece = lastClickedPiece.clone();
+                            //        tempMover.movePiece(tempLastClickedPiece, nextBoard[x][y]);
+                            //    } catch (Exception ex) {
+                            //        throw new RuntimeException(ex);
+                            //    }
+//
+                            //    if(tempMover.isInCheck(whiteKing)){
+                            //        System.out.println("Move not allowed, white king in check.");
+                            //        return;
+                            //    }
+                            //}
+//
+                            //else if (blackKingInCheck){
+                            //    var tempPiece = lastClickedPiece;
+                            //    var tempTarget = pieces[x][y];
+                            //    mover.movePiece(lastClickedPiece, pieces[x][y]);
+                            //    if(mover.isInCheck(blackKing)){
+                            //        System.out.println("Move not allowed, black king in check.");
+                            //        mover.movePiece(tempTarget, tempPiece);
+                            //    }
+//
+                            //}
+
+                            mover.movePiece(lastClickedPiece, pieces[x][y]);
+                            turn++;
+
+                        }
+                        highlightedTiles = null;
+                        lastClickedPiece = null;
                     }
-                    highlightedTiles = null;
-                    lastClickedPiece = null;
+
+                    // If clicked on piece generate all possible moves and show it, store the clicked piece
+                    else if (!(pieces[x][y] instanceof Empty) && turn%2 == 0 && pieces[x][y].team == 'w' ||
+                    !(pieces[x][y] instanceof Empty) && turn%2 == 1 && pieces[x][y].team == 'b') {
+                        lastClickedPiece = pieces[x][y];
+                        var moves = mover.GenerateAllMoves(lastClickedPiece);
+                        highlightedTiles = moves;
+                    }
+
+                    //System.out.println("Piece: " + pieces[x][y]);
+                    //System.out.println(NotationConverter.ConvertToNotaion(pieces));
+
+                    whiteKingInCheck = mover2.isInCheck(whiteKing);
+                    blackKingInCheck = mover2.isInCheck(blackKing);
+                    // Repaint the board and pieces
+                    repaint();
                 }
-
-                // If clicked on piece generate all possible moves and show it, store the clicked piece
-                else if (!(pieces[x][y] instanceof Empty)) {
-                    lastClickedPiece = pieces[x][y];
-                    var moves = mover.GenerateAllMoves(lastClickedPiece);
-                    highlightedTiles = moves;
-                }
-
-                System.out.println("Piece: " + pieces[x][y]);
-                System.out.println(NotationConverter.ConvertToNotaion(pieces));
-
-                whiteKingInCheck = mover2.isInCheck(whiteKing);
-                blackKingInCheck = mover2.isInCheck(blackKing);
-                // Repaint the board and pieces
-                repaint();
             }
         });
     }

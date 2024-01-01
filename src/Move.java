@@ -272,4 +272,8 @@ public class Move {
 
         return false;
     }
+
+    public void calculateNextMove(){
+
+    }
 }
