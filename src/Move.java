@@ -263,7 +263,6 @@ public class Move {
                 if (!(pieces[i][j] instanceof Empty) && pieces[i][j].team != king.team){
                     var posMoves = GenerateAllMoves(pieces[i][j]);
                     if(posMoves.contains(king)){
-                        System.out.println(king.team + " is in check.");
                         return true;
                     }
                 }
@@ -273,7 +272,4 @@ public class Move {
         return false;
     }
 
-    public void calculateNextMove(){
-
-    }
 }

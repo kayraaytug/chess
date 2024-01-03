@@ -1,0 +1,7 @@
+RNBKQBNRPPPPPPPP....................p...........pppp.ppprnbkqbnr
+RNBKQBNRPPP.PPPP...........P........p...........pppp.ppprnbkqbnr
+RNBKQBNRPPP.PPPP.........b.P........p...........pppp.ppprnbkq.nr
+RNBKQBNRPPP..PPP....P....b.P........p...........pppp.ppprnbkq.nr
+RNBKQBNRPPP..PPP....P....b.P........p........p..pppp..pprnbkq.nr
+RNBKQBNRPPP..P.P....P.P..b.P........p........p..pppp..pprnbkq.nr
+RNBKQBNRPPP..P.P....P.P..b.P........p..q.....p..pppp..pprnbk..nr

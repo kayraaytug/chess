@@ -3,8 +3,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import utils.mp3Player;
+import utils.GameRecorder;
 
 public class Board extends JPanel {
     private static final int WIDTH = 800;
@@ -26,11 +28,13 @@ public class Board extends JPanel {
 
     private int turn = 0;
 
+    public String boardAsString = "";
+
     public Board() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.BLACK);
         mp3Player walkman = new mp3Player();
-
+        GameRecorder gameRecorder = new GameRecorder();
         // Initialize tiles
         int xStart = 0, yStart = 0;
         for (int i = 0; i < 8; i++) {
@@ -140,6 +144,15 @@ public class Board extends JPanel {
                             //}
 
                             mover.movePiece(lastClickedPiece, pieces[x][y]);
+                            String boardString = NotationConverter.ConvertToNotaion(pieces);
+                            boardAsString += boardString + "\n";
+                            System.out.println(boardAsString);
+
+                            try {
+                                gameRecorder.write(boardAsString);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
                             turn++;
 
                         }
@@ -156,10 +169,11 @@ public class Board extends JPanel {
                     }
 
                     //System.out.println("Piece: " + pieces[x][y]);
-                    //System.out.println(NotationConverter.ConvertToNotaion(pieces));
 
                     whiteKingInCheck = mover2.isInCheck(whiteKing);
                     blackKingInCheck = mover2.isInCheck(blackKing);
+                    System.out.println("White king in check: " + whiteKingInCheck);
+                    System.out.println("Black king in check: " + blackKingInCheck);
                     // Repaint the board and pieces
                     repaint();
                 }

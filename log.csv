@@ -1,0 +1,13 @@
+a10f95c,kayraaytug,40 minutes ago,Turn based logic implemented. Override clone method in Piece class.
+a73371f,kayraaytug,9 days ago,Image resolutions fixed Sound effects added
+df6218d,kayraaytug,9 days ago,init GameLogic
+62ee55b,kayraaytug,9 days ago,Removed disgusting collision detect function.
+18902b7,kayraaytug,9 days ago,I'm lost at this point...
+f83da77,kayraaytug,11 days ago,Merge remote-tracking branch 'origin/main'
+efc66c3,kayraaytug,2 weeks ago,Merge remote-tracking branch 'origin/main'
+995a1a8,kayraaytug,2 weeks ago,Changed unnecessary public variables to private
+1101f35,kayraaytug,2 weeks ago,Removed clickArea logic. Added coordination based piece selection. Added array swap operations.
+3885c58,kayraaytug,2 weeks ago,Added clickArea Added piece move logic
+9cc7a56,kayraaytug,3 weeks ago,Board.java Added bitmap logic Added new piece types Better resolution images Piece drawings
+847156c,kayraaytug,3 weeks ago,init images
+de4a513,kayraaytug,3 weeks ago,init
